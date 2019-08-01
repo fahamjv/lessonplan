@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+
+        <link rel="stylesheet" href="{{url_for('static', filename='css/footable.bootstrap.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/footable.paging.css')}}">
+    </head>
+    <body>
+        {% if name %}
+            <h1>{{ name }}</h1>
+        {% else %}
+            <h1>Hello, World!</h1>
+        {% endif %}
+
+        <table class="table" data-paging="true">
+
+
+        </table>
+
+    </body>
+
+
+    <script src="{{url_for('static', filename='js/jquery-3.4.1.js')}}"></script>
+    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/footable.js')}}"></script>
+    <script src="{{url_for('static', filename='js/footable.paging.js')}}"></script>
+
+    <script>
+        jQuery(function($){
+            $('.table').footable({
+                "columns": $.get('columns'),
+                "rows": $.get('rows')
+            });
+        });
+    </script>
+</html>
