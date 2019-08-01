@@ -3,20 +3,34 @@ from pprint import *
 from datetimerange import DateTimeRange
 from datetime import *
 import pymysql.cursors
+import random
 
 app = Flask(__name__)
-
 
 
 def same_time(rows):
     ll = []
     counter = 0
 
+    colors = ['#9e0000',
+              '#009e73',
+              '#004f9e',
+              '#9e0000',
+              '#800080',
+              '#FF00FF',
+              '#00FF00',
+              '#0000FF',
+              '#008080',
+              '#00FFFF',
+              '#00FF00',
+              ]
+
+
     for i in range(0, len(rows)):
         for j in range(i + 1, len(rows)):
             if rows[i]['time'].is_intersection(rows[j]['time']):
                 counter += 1
-                ll.append([rows[i]['id'],rows[j]['id']])
+                ll.append([rows[i]['id'],rows[j]['id'],random.choice(colors)])
 
     return ll
 
@@ -75,26 +89,15 @@ def check():
 
             rows = make_rows(result)
 
-            return str(rows)
-
 
             ll = []
-
-            for item in ['shanbe', 'yekshanbe', 'doshanbe', 'seshanbe', 'chaharshanbe']:
+            for item in ['saturday','sunday','monday','tuesday','wednesday']:
                 day = same_days(rows, item)
                 time = same_time(day)
                 if (time):
-                    ll.append(time[0])
+                    ll.append(time)
 
             return jsonify(ll)
-
-
-            for item in result:
-                item['start_time'] = item['start_time'][:-3]
-                item['end_time'] = item['end_time'][:-3]
-                item['remove'] = "<a href='%s'>Remove</a>" % url_for('remove', id=item['id'])
-
-            return jsonify(result)
 
     finally:
         connection.close()
@@ -190,6 +193,7 @@ def rows():
                 item['start_time'] = item['start_time'][:-3]
                 item['end_time'] = item['end_time'][:-3]
                 item['remove'] = "<a href='%s'>Remove</a>" % url_for('remove',id=item['id'])
+                item['remove'] = "<a href='%s'><button type='button' class='btn btn-danger'>Delete</button></a>" % url_for('remove',id=item['id'])
 
             return jsonify(result)
 

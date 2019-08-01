@@ -42,12 +42,15 @@
                 </div>
         </div>
 
+
+        <button id="check" class="btn btn-primary" onclick="check()">Check</button>
+
+
         <hr>
 
-        <table class="table" data-paging="true">
+        <table id="classes_table" class="table" data-paging="true"></table>
 
 
-        </table>
 
     </body>
 
@@ -64,5 +67,72 @@
                 "rows": $.get('rows')
             });
         });
+    </script>
+
+
+    <script>
+        function allTableRows(){
+            var allrows = []
+            $.each($(".table tbody").find("tr"), function () {
+                var rr = Number($(this).find("td").html()[0] + $(this).find("td").html()[1])
+                allrows.push(rr)
+                <!--$(this).css('background-color','red')-->
+            });
+
+            return allrows;
+        }
+
+        function changeTableRowColor(row1,row2,color){
+            $.each($(".table tbody").find("tr"), function () {
+                var rr = Number($(this).find("td").html()[0] + $(this).find("td").html()[1])
+                if (rr == row1 || rr == row2){
+                    $(this).css('background-color',color)
+                }
+            });
+        }
+
+
+        function check(){
+
+
+            jQuery.ajax({
+
+                type:"get",
+                url: "{{url_for('check')}}",
+                success: function(data) {
+
+
+                    var ft = FooTable.get("#classes_table"),
+                        rows = ft.rows.all,
+                        total = 0;
+
+                    console.log(data)
+
+
+                    for (var i in data){
+                        let x = data[i]
+
+                        for (var j in x){
+
+                            changeTableRowColor(x[j][0],x[j][1],x[j][2])
+
+                        }
+
+                    }
+
+
+                    for (var key in rows){
+<!--                        console.log(rows[key].val()['id'])-->
+
+<!--                        console.log(rows[key])-->
+                    }
+
+
+                },
+                error: function(data) {
+                    console.log(data)
+                },
+            });
+        }
     </script>
 </html>
