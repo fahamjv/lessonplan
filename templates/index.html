@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>کلاس ساز</title>
         <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
 
         <link rel="stylesheet" href="{{url_for('static', filename='css/footable.bootstrap.css')}}">
@@ -12,72 +12,72 @@
 
         <link rel="stylesheet" href="{{url_for('static', filename='css/footable.core.standalone.css')}}">
 
+        <link rel="stylesheet" href="http://t00rk.github.io/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css">
+
     </head>
+    <script src="{{url_for('static', filename='js/jquery-3.4.1.js')}}"></script>
+
+
     <body>
-        <nav class="navbar navbar-light bg-light">
-          <a class="navbar-brand" href="#">
-              <img src="{{url_for('static', filename='img/icon.png')}}" width="50" height="50" alt="">
-              کلاس ساز
-          </a>
-        </nav>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="{{url_for('static', filename='img/icon.png')}}" width="50" height="50" alt="">
+            کلاس ساز
+        </a>
+    </nav>
 
-        <div class="container" style="text-align:right;">
-                  <div class="columns">
-                        <form method="post" action="{{ url_for('add') }}">
-                          <div class="form-group">
-                            <label for="lesson_code">کد درس</label>
-                            <input type="text" name="lesson_code" class="form-control" id="lesson_code" aria-describedby="emailHelp" placeholder="کد درس" required>
-                          </div>
-
-                          <div class="form-group">
-                              <label for="day">روز</label>
-                              <select class="form-control" id="day" name="day" required>
-                                <option value="شنبه">شنبه</option>
-                                <option value="یکشنبه">یکشنبه</option>
-                                <option value="دوشنبه">دوشنبه</option>
-                                <option value="سه شنبه">سه شنبه</option>
-                                <option value="چهارشنبه">چهارشنبه</option>
-                              </select>
-                          </div>
-
-
-                          <div class="form-group">
-                            <label for="start_time">زمان شروع کلاس</label>
-                            <input type="time" name="start_time" class="form-control" id="start_time" required>
-
-                            <label for="end_time">زمان پایان کلاس</label>
-                            <input type="time" name="end_time" class="form-control" id="end_time" required>
-                          </div>
-
-                          <button type="submit" class="btn btn-outline-secondary">افزودن</button>
-                        </form>
-
+    <br>
+    <div class="container" style="text-align:right;">
+        <div class="columns shadow-lg p-3 mb-5 bg-white rounded">
+            <form method="post" action="{{ url_for('add') }}">
+                <div class="form-group">
+                    <label for="lesson_code">کد درس</label>
+                    <input type="text" name="lesson_code" class="form-control" id="lesson_code" aria-describedby="emailHelp" placeholder="کد درس" required>
                 </div>
 
-                <center>
-                    <button id="check" class="btn btn-primary" onclick="check()">پردازش</button>
-                </center>
+                <div class="form-group">
+                    <label for="day">روز</label>
+                    <select class="form-control" id="day" name="day" required>
+                        <option value="شنبه">شنبه</option>
+                        <option value="یکشنبه">یکشنبه</option>
+                        <option value="دوشنبه">دوشنبه</option>
+                        <option value="سه شنبه">سه شنبه</option>
+                        <option value="چهارشنبه">چهارشنبه</option>
+                    </select>
+                </div>
 
-                    <hr>
 
+                <div class="form-group">
+                    <label for="start_time">زمان شروع کلاس</label>
+                    <input type="time" name="start_time" class="form-control" id="start_time" required>
 
+                    <label for="end_time">زمان پایان کلاس</label>
+                    <input type="time" name="end_time" class="form-control" id="end_time" required>
+                </div>
+
+                <button type="submit" class="btn btn-outline-secondary">افزودن</button>
+            </form>
 
         </div>
 
+        <center>
+            <button id="check" class="btn btn-primary" onclick="check()">پردازش</button>
+        </center>
+
+        <hr>
+
+
+
+    </div>
+
 
     <div class="col-md-12">
-            <table id="classes_table" class="table" data-paging="true"></table>
+        <table id="classes_table" class="table" data-paging="true"></table>
     </div>
 
 
 
-
-
-
     </body>
-
-
-    <script src="{{url_for('static', filename='js/jquery-3.4.1.js')}}"></script>
     <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/footable.js')}}"></script>
     <script src="{{url_for('static', filename='js/footable.paging.js')}}"></script>
