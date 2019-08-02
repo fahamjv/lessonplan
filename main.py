@@ -4,33 +4,46 @@ from datetimerange import DateTimeRange
 from datetime import *
 import pymysql.cursors
 import random
+from numpy import *
+
 
 app = Flask(__name__)
 
+
+def longest(l):
+    if(not isinstance(l, list)): return(0)
+    return(max([len(l),] + [len(subl) for subl in l if isinstance(subl, list)] +
+        [longest(subl) for subl in l]))
 
 def same_time(rows):
     ll = []
     counter = 0
 
-    colors = ['#9e0000',
-              '#009e73',
-              '#004f9e',
-              '#9e0000',
-              '#800080',
-              '#FF00FF',
-              '#00FF00',
-              '#0000FF',
-              '#008080',
-              '#00FFFF',
-              '#00FF00',
+    colors = ['#B0E2FF',
+              '#A4D3EE',
+              '#8DB6CD',
+              '#1C86EE',
+              '#7FFFD4',
+              '#76EEC6',
+              '#F0F8FF',
+              '#F0F8FF',
+              '#FFE4E1',
+              '#BEBEBE',
+              '#FFF68F',
+              '#FFDAB9',
+              '#CDC8B1',
+              '#EE82EE',
+              '#DDA0DD',
+              '#A020F0',
               ]
 
-
+    color = random.choice(colors)
     for i in range(0, len(rows)):
         for j in range(i + 1, len(rows)):
             if rows[i]['time'].is_intersection(rows[j]['time']):
                 counter += 1
-                ll.append([rows[i]['id'],rows[j]['id'],random.choice(colors)])
+                ll.append([rows[i]['id'],rows[j]['id'],color])
+
 
     return ll
 
@@ -91,7 +104,7 @@ def check():
 
 
             ll = []
-            for item in ['saturday','sunday','monday','tuesday','wednesday']:
+            for item in ['شنبه','یکشنبه','دوشنبه','سه شنبه','چهارشنبه']:
                 day = same_days(rows, item)
                 time = same_time(day)
                 if (time):
@@ -165,12 +178,12 @@ def remove(id):
 @app.route('/columns')
 def columns():
     d = [
-          {"name":"id","title":"ID","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
-          {"name": "day", "title": "Day Name"},
-          {"name": "lesson_code","title":"Lesson code"},
-          {"name":"start_time","title":"Start Time"},
-          {"name":"end_time","title":"End Time"},
-          {"name":"remove","title":"Remove"},
+          {"name":"id","title":"شماره","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
+          {"name": "day", "title": "روز"},
+          {"name": "lesson_code","title":"کد درس"},
+          {"name":"start_time","title":" شروع"},
+          {"name":"end_time","title":" پایان"},
+          {"name":"remove","title":"تنظیمات"},
         ]
     return jsonify(d)
 
@@ -193,7 +206,7 @@ def rows():
                 item['start_time'] = item['start_time'][:-3]
                 item['end_time'] = item['end_time'][:-3]
                 item['remove'] = "<a href='%s'>Remove</a>" % url_for('remove',id=item['id'])
-                item['remove'] = "<a href='%s'><button type='button' class='btn btn-danger'>Delete</button></a>" % url_for('remove',id=item['id'])
+                item['remove'] = "<a href='%s'><button type='button' class='btn btn-danger'>حذف</button></a>" % url_for('remove',id=item['id'])
 
             return jsonify(result)
 

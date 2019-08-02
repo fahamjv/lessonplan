@@ -3596,7 +3596,7 @@
 	 * @type {string}
 	 * @default "No results"
 	 */
-	F.Defaults.prototype.empty = 'No results';
+	F.Defaults.prototype.empty = 'چیزی برای نمایش وجود ندارد';
 
 	/**
 	 * Whether or not the toggle is appended to each row.
