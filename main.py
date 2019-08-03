@@ -121,10 +121,18 @@ def check():
 @app.route('/add',methods=["POST"])
 def add():
 
+
+    assert request.form.get('day') != ""
+    assert request.form.get('start_time') != ""
+    assert request.form.get('end_time') != ""
+
+
+
     startTime = "%s:%s" % (request.form.get('start_time'),'01')
     endTime = "%s:%s" % (request.form.get('end_time'),'01')
     day = request.form.get('day')
     lessonCode = request.form.get('lesson_code')
+    lessonName = request.form.get('lesson_name')
 
 
 
@@ -135,10 +143,12 @@ def add():
                                      db='classplanning',
                                      charset='utf8mb4',
                                      cursorclass=pymysql.cursors.DictCursor)
+
         with connection.cursor() as cursor:
+
             # Create a new record
-            sql = "INSERT INTO `classes` (`id`, `lesson_code`, `day`, `start_time`, `end_time`) VALUES (NULL, %s, %s , %s, %s)"
-            cursor.execute(sql, (lessonCode, day, startTime, endTime))
+            sql = "INSERT INTO `classes` (`id` , `lesson_name` , `lesson_code`, `day`, `start_time`, `end_time`) VALUES (NULL, %s, %s, %s , %s, %s)"
+            cursor.execute(sql, (lessonName,lessonCode, day, startTime, endTime))
 
         connection.commit()
 
@@ -146,9 +156,6 @@ def add():
         connection.close()
         return redirect('/')
 
-
-
-    return  startTime + '<br>' + endTime + '<br>' + day + '<br>' + lessonCode
 
 
 
@@ -179,6 +186,7 @@ def remove(id):
 def columns():
     d = [
           {"name":"id","title":"شماره","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
+          {"name": "lesson_name", "title": "نام درس"},
           {"name": "day", "title": "روز"},
           {"name": "lesson_code","title":"کد درس"},
           {"name":"start_time","title":" شروع"},
@@ -198,7 +206,7 @@ def rows():
                                      cursorclass=pymysql.cursors.DictCursor)
 
         with connection.cursor() as cursor:
-            sql = "SELECT * FROM `classes`"
+            sql = "SELECT * FROM `classes`  ORDER BY `day`"
             cursor.execute(sql)
             result = cursor.fetchall()
 
