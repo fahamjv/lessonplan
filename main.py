@@ -122,9 +122,9 @@ def check():
 def add():
 
 
-    assert request.form.get('day') != ""
-    assert request.form.get('start_time') != ""
-    assert request.form.get('end_time') != ""
+    # assert request.form.get('day') != ""
+    # assert request.form.get('start_time') != ""
+    # assert request.form.get('end_time') != ""
 
 
 
@@ -133,6 +133,8 @@ def add():
     day = request.form.get('day')
     lessonCode = request.form.get('lesson_code')
     lessonName = request.form.get('lesson_name')
+    teacher = request.form.get('teacher')
+
 
 
 
@@ -147,8 +149,9 @@ def add():
         with connection.cursor() as cursor:
 
             # Create a new record
-            sql = "INSERT INTO `classes` (`id` , `lesson_name` , `lesson_code`, `day`, `start_time`, `end_time`) VALUES (NULL, %s, %s, %s , %s, %s)"
-            cursor.execute(sql, (lessonName,lessonCode, day, startTime, endTime))
+            sql = "INSERT INTO `classes` (`id`, `lesson_name`, `teacher`, `lesson_code`, `day`, `start_time`, `end_time`) VALUES (NULL, %s, %s, %s, %s, %s, %s)"
+            print(sql)
+            cursor.execute(sql, (lessonName,teacher,lessonCode,day,startTime,endTime))
 
         connection.commit()
 
@@ -187,6 +190,7 @@ def columns():
     d = [
           {"name":"id","title":"شماره","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
           {"name": "lesson_name", "title": "نام درس"},
+          {"name": "teacher", "title": "استاد"},
           {"name": "day", "title": "روز"},
           {"name": "lesson_code","title":"کد درس"},
           {"name":"start_time","title":" شروع"},
