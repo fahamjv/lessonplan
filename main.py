@@ -87,6 +87,10 @@ def main():
 
 @app.route('/check')
 def check():
+    major = request.args.get('major')
+    grade = request.args.get('grade')
+
+
     try:
         connection = pymysql.connect(host='localhost',
                                      user='root',
@@ -96,9 +100,11 @@ def check():
                                      cursorclass=pymysql.cursors.DictCursor)
 
         with connection.cursor() as cursor:
-            sql = "SELECT * FROM `classes`"
+            sql = "SELECT * FROM `classes` WHERE `major`='%s' AND `grade`='%s'" % (major,grade)
+
             cursor.execute(sql)
             result = cursor.fetchall()
+
 
             rows = make_rows(result)
 
@@ -134,8 +140,8 @@ def add():
     lessonCode = request.form.get('lesson_code')
     lessonName = request.form.get('lesson_name')
     teacher = request.form.get('teacher')
-
-
+    major = request.form.get('major')
+    grade = request.form.get('grade')
 
 
     try:
@@ -149,9 +155,9 @@ def add():
         with connection.cursor() as cursor:
 
             # Create a new record
-            sql = "INSERT INTO `classes` (`id`, `lesson_name`, `teacher`, `lesson_code`, `day`, `start_time`, `end_time`) VALUES (NULL, %s, %s, %s, %s, %s, %s)"
+            sql = "INSERT INTO `classes` (`id`, `lesson_name`, `teacher`, `lesson_code`, `day`, `start_time`, `end_time`, `major`, `grade`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s)"
             print(sql)
-            cursor.execute(sql, (lessonName,teacher,lessonCode,day,startTime,endTime))
+            cursor.execute(sql, (lessonName,teacher,lessonCode,day,startTime,endTime,major,grade))
 
         connection.commit()
 
@@ -188,7 +194,9 @@ def remove(id):
 @app.route('/columns')
 def columns():
     d = [
-          {"name":"id","title":"شماره","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
+          {"name":"id","title":"شماره(شناسه)","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
+          {"name": "grade", "title": "پایه تحصیلی"},
+          {"name": "major", "title": "رشته تحصیلی"},
           {"name": "lesson_name", "title": "نام درس"},
           {"name": "teacher", "title": "استاد"},
           {"name": "day", "title": "روز"},
@@ -199,8 +207,25 @@ def columns():
         ]
     return jsonify(d)
 
-@app.route('/rows')
+@app.route('/rows', methods = ['GET'])
 def rows():
+
+
+    sql = "SELECT * FROM `classes` ORDER BY `day`"
+
+
+
+
+    if request.args.get('major') and request.args.get('grade'):
+        sql = "SELECT * FROM `classes` WHERE  `major`='%s' and `grade`='%s' ORDER BY `day`" % (request.args.get('major'),request.args.get('grade'))
+
+    elif request.args.get('grade'):
+        sql = "SELECT * FROM `classes` WHERE  `grade`='%s'  ORDER BY `day`" % (request.args.get('grade'))
+
+    elif request.args.get('major'):
+        sql = "SELECT * FROM `classes` WHERE  `major`='%s'  ORDER BY `day`" % (request.args.get('major'))
+
+
     try:
         connection = pymysql.connect(host='localhost',
                                      user='root',
@@ -210,7 +235,6 @@ def rows():
                                      cursorclass=pymysql.cursors.DictCursor)
 
         with connection.cursor() as cursor:
-            sql = "SELECT * FROM `classes`  ORDER BY `day`"
             cursor.execute(sql)
             result = cursor.fetchall()
 

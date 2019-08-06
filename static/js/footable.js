@@ -3517,7 +3517,8 @@
 			this.array = this.all.slice(0);
 		},
 		$create: function(){
-			this.$empty = $('<tr/>', { 'class': 'footable-empty' }).append($('<td/>').text(this.emptyString));
+//			this.$empty = $('<tr/>', { 'class': 'footable-empty' }).append($('<td/>').text(this.emptyString));
+			this.$empty = $('');
 		},
 		/**
 		 * Performs the actual drawing of the table rows.
@@ -3596,7 +3597,7 @@
 	 * @type {string}
 	 * @default "No results"
 	 */
-	F.Defaults.prototype.empty = 'چیزی برای نمایش وجود ندارد';
+//	F.Defaults.prototype.empty = 'چیزی برای نمایش وجود ندارد';
 
 	/**
 	 * Whether or not the toggle is appended to each row.
@@ -4706,7 +4707,7 @@
 		delay: 1200,
 		min: 1,
 		space: 'AND',
-		placeholder: 'Search',
+		placeholder: 'جستجو',
 		dropdownTitle: null,
 		position: 'right',
 		connectors: true,

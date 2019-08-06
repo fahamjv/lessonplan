@@ -32,6 +32,28 @@
             <form method="post" action="{{ url_for('add') }}">
 
 
+                 <div class="form-group">
+                    <label for="major"><span class="text-danger">*</span>رشته تحصیلی</label>
+                    <select class="form-control" id="major" name="major" required>
+                        <option value="کامپیوتر">کامپیوتر</option>
+                        <option value="الکترونیک">الکترونیک</option>
+                        <option value="مکانیک خودرو">مکانیک خودرو</option>
+                        <option value="ساختمان">ساختمان</option>
+                        <option value="حسابداری">حسابداری</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="grade"><span class="text-danger">*</span>پایه تحصیلی</label>
+                    <select class="form-control" id="grade" name="grade" required>
+                        <option value="دهم">دهم</option>
+                        <option value="یازدهم">یازدهم</option>
+                        <option value="دوازدهم">دوازدهم</option>
+                    </select>
+                </div>
+
+
                 <div class="form-group">
                     <label for="teacher">استاد</label>
                     <input type="text" name="teacher" class="form-control" id="teacher" placeholder="استاد">
@@ -50,7 +72,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="day">روز</label>
+                    <label for="day"><span class="text-danger">*</span>روز</label>
                     <select class="form-control" id="day" name="day" >
                         <option value="شنبه">شنبه</option>
                         <option value="یکشنبه">یکشنبه</option>
@@ -60,13 +82,12 @@
                     </select>
                 </div>
 
-
                 <div class="form-group">
-                    <label for="start_time">زمان شروع کلاس</label>
-                    <input type="time" name="start_time" class="form-control" id="start_time" >
+                    <label for="start_time"><span class="text-danger">*</span>زمان شروع کلاس</label>
+                    <input type="time" name="start_time" class="form-control" id="start_time" required>
 
-                    <label for="end_time">زمان پایان کلاس</label>
-                    <input type="time" name="end_time" class="form-control" id="end_time" >
+                    <label for="end_time"><span class="text-danger">*</span>زمان پایان کلاس</label>
+                    <input type="time" name="end_time" class="form-control" id="end_time" required>
                 </div>
 
                 <button type="submit" class="btn btn-outline-secondary">افزودن</button>
@@ -75,8 +96,42 @@
         </div>
 
         <center>
-            <button id="check" class="btn btn-primary" onclick="check()">پردازش</button>
+            <button id="check" class="btn btn-success btn-lg btn-block" onclick="check()" disabled>پردازش</button>
         </center>
+
+        <hr>
+
+        <div class="columns shadow-lg p-3 mb-5 bg-white rounded">
+            <form method="get" action="">
+                <div class="row">
+                        <div class="col">
+                            <label for="grade-search">پایه تحصیلی</label>
+                            <select class="form-control" id="grade-search" name="grade-search">
+                                <option value="">همه</option>
+                                <option value="دهم">دهم</option>
+                                <option value="یازدهم">یازدهم</option>
+                                <option value="دوازدهم">دوازدهم</option>
+                            </select>
+                        </div>
+
+                        <div class="col">
+                            <label for="major-search">رشته تحصیلی</label>
+                            <select class="form-control" id="major-search" name="major-search" >
+                                <option value="">همه</option>
+                                <option value="کامپیوتر">کامپیوتر</option>
+                                <option value="الکترونیک">الکترونیک</option>
+                                <option value="مکانیک خودرو">مکانیک خودرو</option>
+                                <option value="ساختمان">ساختمان</option>
+                                <option value="حسابداری">حسابداری</option>
+                            </select>
+                        </div>
+
+                        <div class="col">
+                            <button type="button" class="btn btn-info btn-lg btn-block" id="search">جستجو</button>
+                        </div>
+                </div>
+            </form>
+        </div>
 
         <hr>
 
@@ -86,7 +141,8 @@
 
 
     <div class="col-md-12">
-        <table id="classes_table" class="table" data-paging="true"></table>
+
+        <table id="classes_table" class="table" data-paging="true"  data-filtering="true"></table>
     </div>
 
 
@@ -97,12 +153,44 @@
     <script src="{{url_for('static', filename='js/footable.paging.js')}}"></script>
 
     <script>
+        function disable_enable_check_button(){
+            if($('#grade-search').val() == null || $('#grade-search').val() == '' || $('#major-search').val() == null || $('#major-search').val() == ''){
+                $('#check').prop('disabled', true);
+            }
+            else {
+                $('#check').prop('disabled', false);
+            }
+        }
+
+
         jQuery(function($){
             $('.table').footable({
                 "columns": $.get('columns'),
                 "rows": $.get('rows')
             });
+
+            $('#search').click(function() {
+                let grade = document.getElementById("grade-search").value;
+                let major = document.getElementById("major-search").value;
+
+                $('.table').footable({
+                    "columns": $.get('columns'),
+                    "rows": $.get('rows?grade='+grade+'&major='+major+'')
+                });
+            });
+
+
+            $('#grade-search').on('change', function() {
+                disable_enable_check_button()
+            });
+
+
+            $('#major-search').on('change', function() {
+                disable_enable_check_button()
+            });
+
         });
+
     </script>
 
 
@@ -122,11 +210,7 @@
 
             $.each($(".table tbody").find("tr"), function () {
 
-
-<!--                var rr = Number($(this).find("td").html()[0] + $(this).find("td").html()[1])-->
-
                 var rr = Number($(this).find("td").html())
-
 
                 if (rr == row1 || rr == row2){
                     $(this).css('background-color',color)
@@ -137,19 +221,24 @@
 
         function check(){
 
+            let grade = document.getElementById("grade-search").value;
+            let major = document.getElementById("major-search").value;
+
 
             jQuery.ajax({
 
                 type:"get",
-                url: "{{url_for('check')}}",
+                url: 'check?grade='+grade+'&major='+major+'',
                 success: function(data) {
+
+                    if(data == ''){
+                        alert('تداخلی در رشته '+major+' در پایه '+grade+' وجود ندارد .')
+                    }
 
 
                     var ft = FooTable.get("#classes_table"),
                         rows = ft.rows.all,
                         total = 0;
-
-
 
 
                     for (var i in data){
