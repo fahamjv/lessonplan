@@ -1,8 +1,9 @@
 # lessonplan
 
 Check your highschool lesson schedules !
-
 Writen in flask
+
+Gonna make ENGLISH version soon 
 
 ![alt text](https://raw.githubusercontent.com/fahamjv/lessonplan/master/screenshots/photo_2019-09-08_13-22-32.jpg)
 ![alt text](https://raw.githubusercontent.com/fahamjv/lessonplan/master/screenshots/photo_2019-09-08_13-22-33.jpg)
